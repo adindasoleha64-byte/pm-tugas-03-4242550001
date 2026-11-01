@@ -1,12 +1,14 @@
 import 'dart:io';
 
+typedef MataKuliah = ({String nama, int sks, String huruf, int bobot});
+
 String baca(String label) {
   stdout.write('$label : ');
   return (stdin.readLineSync() ?? '').trim();
 }
 
 void main() {
-  final List<({String nama, int sks, String huruf, int bobot})> data = [];
+  final List<MataKuliah> data = [];
 
   print('Masukkan data mata kuliah. Kosongkan nama untuk selesai.');
   while (true) {
@@ -22,7 +24,24 @@ void main() {
     }
   }
 
+  if (data.isEmpty) {
+    print('Belum ada data yang valid.');
+    return;
+  }
+
+  final double ip = hitungIp(data);
+  print('IP : ${ip.toStringAsFixed(2)}');
+
+  final perluDiperbaiki = data.where((m) => m.bobot < 2).toList();
+  print('Perlu diperbaiki: ${perluDiperbaiki.map((m) => m.nama).join(', ')}');
+
   print('Data diterima: ${data.length}');
+}
+
+double hitungIp(List<MataKuliah> data) {
+  final int totalSks = data.fold<int>(0, (sum, m) => sum + m.sks);
+  final int totalPoin = data.fold<int>(0, (sum, m) => sum + m.bobot * m.sks);
+  return totalPoin / totalSks;
 }
 
 int bobot(String huruf) {
