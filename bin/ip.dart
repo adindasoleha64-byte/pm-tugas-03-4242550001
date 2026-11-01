@@ -7,6 +7,31 @@ String baca(String label) {
   return (stdin.readLineSync() ?? '').trim();
 }
 
+String predikat(double ip) {
+  if (ip >= 3.50) return 'Cum Laude';
+  if (ip >= 3.01) return 'Sangat Memuaskan';
+  if (ip >= 2.76) return 'Memuaskan';
+  return 'Tanpa Predikat';
+}
+
+void cetakKhs(List<MataKuliah> data, {bool urutkan = true}) {
+  final tampil = [...data];
+  if (urutkan) {
+    tampil.sort((a, b) => b.bobot.compareTo(a.bobot));
+  }
+
+  print(
+    '${'Mata Kuliah'.padRight(24)}${'SKS'.padLeft(5)}${'Nilai'.padLeft(7)}',
+  );
+  print('-' * 36);
+  for (final m in tampil) {
+    print(
+      '${m.nama.padRight(24)}${m.sks.toString().padLeft(5)}${m.huruf.padLeft(7)}',
+    );
+  }
+  print('-' * 36);
+}
+
 void main() {
   final List<MataKuliah> data = [];
 
@@ -29,13 +54,20 @@ void main() {
     return;
   }
 
+  // Tampilkan tabel KHS terurut dari nilai tertinggi
+  cetakKhs(data);
+
+  // Ringkasan: total SKS, IP, dan predikat
+  final int totalSks = data.fold<int>(0, (sum, m) => sum + m.sks);
   final double ip = hitungIp(data);
-  print('IP : ${ip.toStringAsFixed(2)}');
+  print('Total SKS : $totalSks');
+  print('IP : ${ip.toStringAsFixed(2)} (${predikat(ip)})');
 
+  // Mata kuliah dengan bobot < 2, hanya ditampilkan kalau ada
   final perluDiperbaiki = data.where((m) => m.bobot < 2).toList();
-  print('Perlu diperbaiki: ${perluDiperbaiki.map((m) => m.nama).join(', ')}');
-
-  print('Data diterima: ${data.length}');
+  if (perluDiperbaiki.isNotEmpty) {
+    print('Perlu diperbaiki: ${perluDiperbaiki.map((m) => m.nama).join(', ')}');
+  }
 }
 
 double hitungIp(List<MataKuliah> data) {
