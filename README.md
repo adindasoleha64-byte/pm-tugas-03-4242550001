@@ -5,7 +5,7 @@ Kalkulator IP semester berbasis console, dibuat dengan Dart.
 ## Identitas
 - Nama      : Adinda Soleha
 - NIM       : 4242550001
-- Kelas     : PSIK 2024 D
+- Kelas     : PSIK 24D
 - Matakuliah: Pemrograman Mobile
 
 ## Cara Menjalankan
